@@ -18,7 +18,14 @@ const userRoutes = require("./routes/userRoutes");
 app.use("/posts", publicPostRoutes);
 app.use("/admin/posts", adminPostRoutes);
 app.use("/auth", authRoutes);
-app.use("/users", userRoutes)
+app.use("/users", userRoutes);
+
+app.use((req, res, next) => {
+    res.status(404).json({
+        success: false,
+        message: `Cannot find ${req.originalUrl} on this server!`
+    });
+});
 
 const PORT = 3000;
 app.listen(3000, (error) => {
