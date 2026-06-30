@@ -41,8 +41,6 @@ async function login(req, res) {
                 token: token
             })
         })
-
-        // return res.json({ message: "login successful. jwt will be implemented later" });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Error on log in' })

@@ -37,7 +37,7 @@ export default function Dashboard() {
   return (
     <div>
       <h1>Home page</h1>
-      <p>Blog posts:</p>
+      <p>Welcome to Odinbook!</p>
       {posts.length === 0 ? (
         <p>No posts yet</p>
       ) : (
@@ -48,7 +48,6 @@ export default function Dashboard() {
                 <Link to={`/posts/${post.id}`}>
                   <div>Title: {post.title} - Author: {post.author?.username ?? "deleted user"} - nrofcomments: {post._count.comments}</div>
                 </Link>
-
               </li>
             ))}
           </ul>
