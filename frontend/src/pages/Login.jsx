@@ -7,7 +7,7 @@ export default function Login() {
     const navigate = useNavigate();
     const location = useLocation();
     const { login } = useAuth();
-    const [email, setEmail] = useState("");
+    const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
     const fromPath = location.state?.from ?? "/";
@@ -22,7 +22,7 @@ export default function Login() {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    email,
+                    username,
                     password,
                 }),
 
@@ -54,14 +54,14 @@ export default function Login() {
             <h1>User Login</h1>
             <p>Login form:</p>
             <form onSubmit={handleSubmit} >
-                <label htmlFor="email">Email: </label>
+                <label htmlFor="username">Username: </label>
                 <input
-                    id="email"
-                    type="email"
-                    name="email"
-                    value={email}
+                    id="username"
+                    type="username"
+                    name="username"
+                    value={username}
                     onChange={(e) => {
-                        setEmail(e.target.value); setErrorMessage("");
+                        setUsername(e.target.value); setErrorMessage("");
                     }} required
                 />
 

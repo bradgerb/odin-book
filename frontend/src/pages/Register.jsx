@@ -7,7 +7,6 @@ export default function Register() {
     const navigate = useNavigate();
     const location = useLocation();
     const { login } = useAuth();
-    const [email, setEmail] = useState("");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
@@ -23,7 +22,6 @@ export default function Register() {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    email,
                     username,
                     password,
                 }),
@@ -57,16 +55,6 @@ export default function Register() {
             <h1>User Register</h1>
             <p>Register form:</p>
             <form onSubmit={handleSubmit} >
-                <label htmlFor="email">Email: </label>
-                <input
-                    id="email"
-                    type="email"
-                    name="email"
-                    value={email}
-                    onChange={(e) => {
-                        setEmail(e.target.value); setErrorMessage("");
-                    }} required
-                />
                 <label htmlFor="username">Username: </label>
                 <input
                     id="username"

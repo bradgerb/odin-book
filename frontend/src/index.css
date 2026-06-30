@@ -1,111 +1,346 @@
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+  --bg: #f7f9fc;
+  --surface: #ffffff;
+  --surface-soft: #f3f5fb;
+  --text: #475569;
+  --text-h: #111827;
+  --text-muted: #6b7280;
+  --border: #d8e0ec;
+  --accent: #4f46e5;
+  --accent-soft: #eef2ff;
+  --accent-strong: #4338ca;
+  --shadow: 0 24px 60px rgba(15, 23, 42, 0.08);
+  --shadow-soft: 0 12px 28px rgba(15, 23, 42, 0.06);
+  --radius: 26px;
+  --radius-sm: 16px;
+  --max-width: 1100px;
+  --transition: 180ms ease;
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
-
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 16px;
+  line-height: 1.65;
   color: var(--text);
-  background: var(--bg);
-  font-synthesis: none;
+  background: radial-gradient(circle at top left, rgba(79, 70, 229, 0.12), transparent 28%),
+    radial-gradient(circle at bottom right, rgba(79, 70, 229, 0.08), transparent 28%),
+    var(--bg);
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
+    --bg: #0f172a;
+    --surface: #111827;
+    --surface-soft: #161e3a;
+    --text: #cbd5e1;
+    --text-h: #f8fafc;
+    --text-muted: #94a3b8;
+    --border: rgba(148, 163, 184, 0.18);
+    --accent: #818cf8;
+    --accent-soft: rgba(129, 140, 248, 0.16);
+    --accent-strong: #6366f1;
+    --shadow: 0 24px 60px rgba(0, 0, 0, 0.4);
+    --shadow-soft: 0 12px 28px rgba(0, 0, 0, 0.28);
   }
+}
 
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+img,
+svg {
+  max-width: 100%;
+  display: block;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
 }
 
 #root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
+  min-height: 100vh;
+}
+
+.reader-layout {
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  box-sizing: border-box;
 }
 
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+  padding: 1rem 1.5rem;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(18px);
+  border-bottom: 1px solid rgba(71, 85, 105, 0.08);
+  box-shadow: 0 8px 30px rgba(15, 23, 42, 0.08);
 }
 
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
+@media (prefers-color-scheme: dark) {
+  .navbar {
+    background: rgba(15, 23, 42, 0.92);
+    border-bottom-color: rgba(148, 163, 184, 0.18);
   }
 }
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
-}
-p {
+
+.navbar h2 {
   margin: 0;
-}
-
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
+  font-size: 1.25rem;
+  letter-spacing: -0.03em;
   color: var(--text-h);
 }
 
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+.navbar ul {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.8rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.navbar a,
+.logout-btn {
+  border: none;
+  background: transparent;
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 600;
+  padding: 0.85rem 1rem;
+  border-radius: 999px;
+  transition: background var(--transition), color var(--transition), transform var(--transition);
+}
+
+.navbar a:hover,
+.logout-btn:hover {
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+}
+
+.navbar a.active {
+  color: var(--accent-strong);
+  box-shadow: inset 0 -2px 0 currentColor;
+}
+
+.logout-btn {
+  cursor: pointer;
+}
+
+main {
+  flex: 1;
+  width: min(100%, var(--max-width));
+  margin: 0 auto;
+  padding: 2rem 1.25rem 3rem;
+}
+
+main h1,
+main h2,
+main h3 {
+  color: var(--text-h);
+  margin-top: 0;
+}
+
+main h1 {
+  font-size: clamp(2rem, 2.8vw, 3.5rem);
+  letter-spacing: -0.04em;
+  margin-bottom: 0.65rem;
+}
+
+main h2 {
+  font-size: clamp(1.5rem, 2.2vw, 2.25rem);
+  margin-bottom: 0.85rem;
+}
+
+main h3 {
+  font-size: 1.2rem;
+  margin-bottom: 0.75rem;
+}
+
+main p {
+  color: var(--text-muted);
+  margin: 0 0 1rem;
+}
+
+main > div {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-soft);
+  padding: 2rem;
+}
+
+main > div > p:first-of-type {
+  margin-top: 0;
+}
+
+main > div ul {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 0;
+  display: grid;
+  gap: 1rem;
+}
+
+main > div ul li {
+  background: var(--surface-soft);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 1.1rem 1rem;
+}
+
+main > div ul li a {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+main > div ul li a:hover {
+  background: rgba(79, 70, 229, 0.06);
+}
+
+form {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+label {
+  display: block;
+  font-size: 0.95rem;
+  margin-bottom: 0.35rem;
+  color: var(--text-h);
+}
+
+input,
+textarea,
+select {
+  width: 100%;
+  min-height: 3rem;
+  padding: 0.95rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  background: var(--surface);
+  color: var(--text);
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.12);
+}
+
+button {
+  align-self: flex-start;
+  border: none;
+  border-radius: 1rem;
+  padding: 0.95rem 1.5rem;
+  background: var(--accent);
+  color: #ffffff;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 14px 36px rgba(79, 70, 229, 0.16);
+  transition: transform var(--transition), background var(--transition), box-shadow var(--transition);
+}
+
+button:hover {
+  transform: translateY(-1px);
+  background: var(--accent-strong);
+}
+
+button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+p[role="alert"] {
+  color: #b91c1c;
+  background: rgba(248, 113, 113, 0.12);
+  border: 1px solid rgba(185, 28, 28, 0.2);
+  padding: 0.95rem 1rem;
+  border-radius: 1rem;
+}
+
+.post-body {
+  background: var(--accent-soft);
+  border-radius: var(--radius-sm);
+  padding: 1.5rem;
+  margin: 1rem 0 1.5rem;
+  color: var(--text);
+  line-height: 1.9;
+}
+
+.post-body p {
+  margin: 0.9rem 0;
+}
+
+.post-body strong {
+  color: var(--text-h);
+}
+
+.welcome-text {
+  color: var(--text-muted);
+  font-size: 0.96rem;
+}
+
+.logout-btn {
+  padding: 0.8rem 1rem;
+  background: rgba(239, 100, 100, 0.1);
+  color: #b91c1c;
+}
+
+.logout-btn:hover {
+  background: rgba(185, 28, 28, 0.12);
+}
+
+@media (max-width: 860px) {
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  main {
+    padding: 1.5rem 1rem 2.5rem;
+  }
+}
+
+@media (max-width: 620px) {
+  .navbar {
+    padding: 0.85rem 1rem;
+  }
+
+  .navbar a,
+  .logout-btn {
+    padding: 0.75rem 0.9rem;
+  }
+
+  main > div {
+    padding: 1.5rem;
+  }
 }
