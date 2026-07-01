@@ -9,7 +9,6 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 export default function Dashboard() {
 
   const [posts, setPosts] = useState([]);
-  const [title, setTitle] = useState("");
   const [postBody, setPostBody] = useState("");
   const [error, setError] = useState("");
   const { user, logout } = useAuth();
@@ -56,42 +55,30 @@ export default function Dashboard() {
                 event.preventDefault();
                 setError("");
 
-                if (!title.trim() || !postBody.trim()) {
-                  setError("Please enter both a title and post body.");
+                const content = postBody.trim();
+                if (!content) {
+                  setError("Post content cannot be empty");
                   return;
                 }
 
                 try {
                   const response = await secureFetch(`${API_BASE_URL}/posts`, {
                     method: "POST",
-                    body: JSON.stringify({ title, content: postBody }),
+                    body: JSON.stringify({ content }),
                   });
 
+                  const result = await response.json();
                   if (!response.ok) {
-                    const result = await response.json();
                     throw new Error(result.error || "Failed to submit post");
                   }
 
-                  const result = await response.json();
                   setPosts((current) => [result.post, ...current]);
-                  setTitle("");
                   setPostBody("");
                 } catch (err) {
                   setError(err.message ?? "Error submitting post");
                 }
               }}
             >
-              <div>
-                <label>
-                  Title
-                  <input
-                    type="text"
-                    value={title}
-                    onChange={(event) => setTitle(event.target.value)}
-                    placeholder="Enter post title"
-                  />
-                </label>
-              </div>
               <div>
                 <label>
                   Post
@@ -117,7 +104,7 @@ export default function Dashboard() {
                   {posts.map((post) => (
                     <li key={post.id}>
                       <Link to={`/posts/${post.id}`}>
-                        <div>Title: {post.title} - Author: {post.author?.username ?? "deleted user"} - nrofcomments: {post._count.comments}</div>
+                        <div>{post.content} <br />Author: {post.author?.username ?? "deleted user"} - {post._count.comments} comments</div>
                       </Link>
                     </li>
                   ))}

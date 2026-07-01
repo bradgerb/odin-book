@@ -26,11 +26,8 @@ export default function PostDetails() {
 
     const loadComments = useCallback(async () => {
         try {
-            const response = await fetch(`${API_BASE_URL}/posts/${id}/comments`, {
+            const response = await secureFetch(`${API_BASE_URL}/posts/${id}/comments`, {
                 method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                }
             });
             if (!response.ok) {
                 throw new Error("Failed to fetch comments");
@@ -49,11 +46,8 @@ export default function PostDetails() {
             setPostStatus("loading");
             setPost(null);
             try {
-                const response = await fetch(`${API_BASE_URL}/posts/${id}`, {
+                const response = await secureFetch(`${API_BASE_URL}/posts/${id}`, {
                     method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                    }
                 });
 
                 if (response.status === 404) {
@@ -75,6 +69,7 @@ export default function PostDetails() {
                 if (!cancelled) {
                     setPost(data.post);
                     setPostStatus("ready");
+                    await loadComments();
                 }
 
             } catch (err) {
@@ -215,17 +210,16 @@ export default function PostDetails() {
     return (
         <div>
             <h2>Post Details:</h2>
-            <h3>Title: {post.title}</h3>
             <p>Post Body:</p>
             <div
                 className="post-body"
                 dangerouslySetInnerHTML={{
-                    __html: DOMPurify.sanitize(post.body ?? ""),
+                    __html: DOMPurify.sanitize(post.content ?? ""),
                 }}
             />
             <p>Author: {post.author?.username ?? "deleted user"}</p>
 
-            <p>Leave a comment for <strong>"{post.title}"</strong>:</p>
+            <p>Leave a comment:</p>
             {errorMessage && <p role="alert">{errorMessage}</p>}
 
             {token ?
@@ -246,8 +240,7 @@ export default function PostDetails() {
                 </div>) :
                 (<div>To leave a comment, please <Link to="/login" state={{ from: location.pathname + location.search }}>log in</Link>.</div>)
             }
-            <p>Nr of comments: {comments.length}</p>
-            <p>Comments:</p>
+            <p>Comments ({comments.length}):</p>
             <ul>
                 {comments.map((comment) => {
                     const isEdited = comment.updatedAt !== comment.publishedDate;
@@ -264,8 +257,8 @@ export default function PostDetails() {
                                         onChange={(e) => setEditCommentBody(e.target.value)}
                                         autoFocus
                                     />
-                                    <button type="submit">Save</button>
-                                    <button
+                                    <button className="comment-btn" type="submit">Save</button>
+                                    <button className="comment-btn"
                                         type="button"
                                         onClick={() => {
                                             setEditingCommentId(null);
@@ -280,7 +273,7 @@ export default function PostDetails() {
                                     <div>{comment.body}</div>
                                     <div>{comment.author?.username ?? "deleted user"} - {isEdited ? `edited at: ${comment.updatedAt}` : `posted at: ${comment.publishedDate}`}</div>
                                     {user && (user?.id === comment.authorId) && (
-                                        <button
+                                        <button className="comment-btn"
                                             type="button"
                                             onClick={() => {
                                                 setEditingCommentId(comment.id);
@@ -290,7 +283,7 @@ export default function PostDetails() {
                                         </button>
                                     )}
                                     {user && (user?.id === comment.authorId || user?.role === "ADMIN") && (
-                                        <button type="button" onClick={() => deleteComment(post.id, comment.id)}>
+                                        <button className="comment-btn" type="button" onClick={() => deleteComment(post.id, comment.id)}>
                                             Delete
                                         </button>
                                     )}

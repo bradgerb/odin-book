@@ -279,6 +279,24 @@ button:disabled {
   box-shadow: none;
 }
 
+/* Smaller buttons used for comment actions (Edit / Delete / Save / Cancel) */
+.comment-btn {
+  padding: 0.35rem 0.6rem;
+  font-size: 0.85rem;
+  border-radius: 0.6rem;
+  background: transparent;
+  color: var(--text-h);
+  border: 1px solid var(--border);
+  box-shadow: none;
+  font-weight: 600;
+  margin-left: 0.5rem;
+}
+.comment-btn:hover {
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+  transform: none;
+}
+
 p[role="alert"] {
   color: #b91c1c;
   background: rgba(248, 113, 113, 0.12);

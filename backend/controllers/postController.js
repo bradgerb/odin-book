@@ -1,7 +1,6 @@
 const { prisma } = require("../lib/prisma.js");
 const { isAuthorized } = require("../utils/permissions.js");
 const { sanitizePostBody } = require("../utils/sanitizePostBody.js");
-//go back and update all res.json to return objects e.g. posts: postsWithAuthors
 
 async function getAllPostsWithAuthors(req, res) {
     try {
@@ -39,7 +38,7 @@ async function getPostWithAuthor(req, res) {
                     }
                 },
                 _count: {
-                    select: { comments: true } //maybe move this to getcomments?
+                    select: { comments: true }
                 }
             }
         })
@@ -63,7 +62,15 @@ async function getCommentsOfPost(req, res) {
                 }
             }
         });
-        res.json({ comments: commentsOfPost });
+        const shaped = commentsOfPost.map(c => ({
+            id: c.id,
+            body: c.content,
+            publishedDate: c.publishedDate,
+            updatedAt: c.updatedAt,
+            authorId: c.authorId,
+            author: c.author
+        }));
+        res.json({ comments: shaped });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Error fetching comments' })
@@ -72,13 +79,20 @@ async function getCommentsOfPost(req, res) {
 
 async function createNewPost(req, res) {
     try {
-        const { title, content } = req.body;
-        const authorId = req.user.userId //from login/register jwt.sign({ userId: user.id }
+        const { content } = req.body;
+        const authorId = req.user?.userId;
+
+        if (!authorId) {
+            return res.status(401).json({ error: 'Unauthorized' });
+        }
+        if (!content || typeof content !== 'string' || !content.trim()) {
+            return res.status(400).json({ error: 'Post content cannot be empty' });
+        }
+
         const newPost = await prisma.post.create({
             data: {
-                title: title,
                 content: sanitizePostBody(content),
-                authorId: authorId
+                authorId: Number(authorId)
             },
             include: {
                 author: {
@@ -101,13 +115,21 @@ async function createNewPost(req, res) {
 
 async function createNewComment(req, res) {
     try {
-        const { commentBody } = req.body; //destructuring const commentBody = req.body.commentBody;
-        const authorId = req.user.userId //from login/register jwt.sign({ userId: user.id }
+        const { commentBody } = req.body;
+        const authorId = req.user?.userId;
+
+        if (!authorId) {
+            return res.status(401).json({ error: 'Unauthorized' });
+        }
+        if (!commentBody || typeof commentBody !== 'string' || !commentBody.trim()) {
+            return res.status(400).json({ error: 'Comment content cannot be empty' });
+        }
+
         const newComment = await prisma.comment.create({
             data: {
                 postId: Number(req.params.postId),
-                body: commentBody,
-                authorId: authorId
+                content: commentBody,
+                authorId: Number(authorId)
             }
         });
         res.json({ comment: newComment })
@@ -124,7 +146,6 @@ async function updatePost(req, res) {
                 id: Number(req.params.postId)
             },
             data: {
-                title: req.body.title,
                 content: req.body.content,
             }
         });
@@ -163,7 +184,7 @@ async function updateComment(req, res) {
                 id: commentId,
             },
             data: {
-                body: req.body.commentBody,
+                content: req.body.commentBody,
             }
         });
         res.json({ comment: updatedComment });
