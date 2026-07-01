@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useSecureFetch } from "../hooks/useSecureFetch";
 import odinImg from "../img/odin.png";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -8,21 +9,24 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 export default function Dashboard() {
 
   const [posts, setPosts] = useState([]);
+  const [title, setTitle] = useState("");
+  const [postBody, setPostBody] = useState("");
+  const [error, setError] = useState("");
   const { user, logout } = useAuth();
+  const secureFetch = useSecureFetch();
 
   useEffect(() => {
+    if (!user) return;
+
     let cancelled = false;
     async function loadPosts() {
       try {
-        const response = await fetch(`${API_BASE_URL}/posts`, {
+        const response = await secureFetch(`${API_BASE_URL}/posts`, {
           method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          }
         });
         if (!response.ok) {
           throw new Error("Failed to fetch posts");
-        };
+        }
         const data = await response.json();
         if (cancelled) return;
         setPosts(data.posts ?? []);
@@ -34,7 +38,7 @@ export default function Dashboard() {
     return () => {
       cancelled = true;
     };
-  }, [])
+  }, [secureFetch, user])
 
   return (
     <>
@@ -47,7 +51,61 @@ export default function Dashboard() {
       ) : (
         <>
           <div>
-            New post form
+            <form
+              onSubmit={async (event) => {
+                event.preventDefault();
+                setError("");
+
+                if (!title.trim() || !postBody.trim()) {
+                  setError("Please enter both a title and post body.");
+                  return;
+                }
+
+                try {
+                  const response = await secureFetch(`${API_BASE_URL}/posts`, {
+                    method: "POST",
+                    body: JSON.stringify({ title, postBody }),
+                  });
+
+                  if (!response.ok) {
+                    const result = await response.json();
+                    throw new Error(result.error || "Failed to submit post");
+                  }
+
+                  const result = await response.json();
+                  setPosts((current) => [result.post, ...current]);
+                  setTitle("");
+                  setPostBody("");
+                } catch (err) {
+                  setError(err.message ?? "Error submitting post");
+                }
+              }}
+            >
+              <div>
+                <label>
+                  Title
+                  <input
+                    type="text"
+                    value={title}
+                    onChange={(event) => setTitle(event.target.value)}
+                    placeholder="Enter post title"
+                  />
+                </label>
+              </div>
+              <div>
+                <label>
+                  Post
+                  <textarea
+                    value={postBody}
+                    onChange={(event) => setPostBody(event.target.value)}
+                    placeholder="Write your post here"
+                    rows={4}
+                  />
+                </label>
+              </div>
+              {error && <p style={{ color: "red" }}>{error}</p>}
+              <button type="submit">Submit post</button>
+            </form>
           </div>
           <br />
           <div>
