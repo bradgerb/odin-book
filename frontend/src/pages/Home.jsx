@@ -64,7 +64,7 @@ export default function Dashboard() {
                 try {
                   const response = await secureFetch(`${API_BASE_URL}/posts`, {
                     method: "POST",
-                    body: JSON.stringify({ title, postBody }),
+                    body: JSON.stringify({ title, content: postBody }),
                   });
 
                   if (!response.ok) {

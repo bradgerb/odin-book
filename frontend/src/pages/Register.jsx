@@ -53,7 +53,6 @@ export default function Register() {
     return (
         <div>
             <h1>User Register</h1>
-            <p>Register form:</p>
             <form onSubmit={handleSubmit} >
                 <label htmlFor="username">Username: </label>
                 <input
@@ -66,7 +65,7 @@ export default function Register() {
                     }} required
                 />
 
-                <label htmlFor="password">Password </label>
+                <label htmlFor="password">Password: </label>
                 <input
                     id="password"
                     type="password"

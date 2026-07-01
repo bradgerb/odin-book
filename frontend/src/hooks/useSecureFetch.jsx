@@ -6,7 +6,6 @@ export function useSecureFetch() {
     const secureFetch = useCallback(async (url, options = {}) => {
         const headers = { ...options.headers };
 
-        //will probably not need this if I do not upload images using forms
         if (!(options.body instanceof FormData) && !headers["Content-Type"]) {
             headers["Content-Type"] = "application/json";
         }

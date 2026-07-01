@@ -72,13 +72,24 @@ async function getCommentsOfPost(req, res) {
 
 async function createNewPost(req, res) {
     try {
-        const { title, postBody } = req.body;
+        const { title, content } = req.body;
         const authorId = req.user.userId //from login/register jwt.sign({ userId: user.id }
         const newPost = await prisma.post.create({
             data: {
                 title: title,
-                body: sanitizePostBody(postBody),
+                content: sanitizePostBody(content),
                 authorId: authorId
+            },
+            include: {
+                author: {
+                    select: {
+                        id: true,
+                        username: true
+                    }
+                },
+                _count: {
+                    select: { comments: true }
+                }
             }
         })
         res.json({ post: newPost });
@@ -114,7 +125,7 @@ async function updatePost(req, res) {
             },
             data: {
                 title: req.body.title,
-                body: req.body.postBody,
+                content: req.body.content,
             }
         });
         res.json(updatedPost);

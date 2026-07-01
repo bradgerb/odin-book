@@ -52,7 +52,6 @@ export default function Login() {
     return (
         <div>
             <h1>User Login</h1>
-            <p>Login form:</p>
             <form onSubmit={handleSubmit} >
                 <label htmlFor="username">Username: </label>
                 <input
@@ -65,7 +64,7 @@ export default function Login() {
                     }} required
                 />
 
-                <label htmlFor="password">Password </label>
+                <label htmlFor="password">Password: </label>
                 <input
                     id="password"
                     type="password"
