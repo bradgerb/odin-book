@@ -273,7 +273,7 @@ export default function PostDetails() {
                                 <>
                                     <div>{comment.body}</div>
                                     <div>
-                                      {comment.author?.username ?? "deleted user"} - {isEdited ? `edited at: ${formatDate(comment.updatedAt)}` : `posted at: ${formatDate(comment.publishedDate)}`}
+                                      Posted by: {comment.author?.username ?? "deleted user"} • {isEdited ? `${formatDate(comment.updatedAt)} (edited)` : `${formatDate(comment.publishedDate)}`}
                                     </div>
                                     {user && (user?.id === comment.authorId) && (
                                         <button className="comment-btn"
