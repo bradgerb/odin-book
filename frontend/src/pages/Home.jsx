@@ -4,6 +4,9 @@ import { useAuth } from "../context/AuthContext";
 import { useSecureFetch } from "../hooks/useSecureFetch";
 import { formatDate } from "../utils/formatDate";
 import odinImg from "../img/odin.png";
+import likeOutline from "../img/likeOutline.svg";
+import like from "../img/like.svg";
+
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -109,7 +112,10 @@ export default function Dashboard() {
                         <div>
                           Posted by: {post.author?.username ?? "deleted user"} • {formatDate(post.publishedDate)}
                         </div>
-                        <div>{post._count.comments} comments</div>
+                        <div>
+                          <img className="like" src={likeOutline} alt="Like this post"/>
+                          {post._count.postLikes} Likes • {post._count.comments} comments
+                        </div>
                       </Link>
                     </li>
                   ))}

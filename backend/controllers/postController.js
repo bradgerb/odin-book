@@ -16,7 +16,10 @@ async function getAllPostsWithAuthors(req, res) {
                     }
                 },
                 _count: {
-                    select: { comments: true }
+                    select: { 
+                        comments: true,
+                        postLikes: true
+                     }
                 }
             }
         });
