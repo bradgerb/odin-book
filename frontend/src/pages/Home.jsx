@@ -132,6 +132,26 @@ export default function Dashboard() {
               <p>No posts yet</p>
             ) : (
               <div>
+                <div className="sort-controls">
+                  <label htmlFor="sort-options" className="sort-label">
+                    Sort by:
+                  </label>
+                  <select name="order_by" id="sort-options" className="sort-select">
+                    <option value="date">Newest</option>
+                    <option value="likes">Most likes</option>
+                    <option value="comments">Most comments</option>
+                  </select>
+                  <label htmlFor="friends-posts-checkbox" className="checkbox-label">
+                    <input
+                      id="friends-posts-checkbox"
+                      type="checkbox"
+                      className="small-checkbox"
+                      // checked={isChecked}
+                      // onChange={handleCheckboxChange}
+                    />
+                    View friends posts only?
+                  </label>
+                </div>
                 <ul>
                   {posts.map((post) => (
                     <li key={post.id}>
