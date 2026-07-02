@@ -1,7 +1,7 @@
 const { Router } = require("express");
 const postRoutes = Router();
 const postController = require("../controllers/postController.js");
-const verifyToken = require("../middleware/verifyToken.js"); //check if user is logged in
+const verifyToken = require("../middleware/verifyToken.js");
 
 postRoutes.use(verifyToken);
 
@@ -13,7 +13,7 @@ postRoutes.post("/", postController.createNewPost);
 postRoutes.post("/:postId/comments", postController.createNewComment);
 
 postRoutes.put("/:postId", postController.updatePost);
-postRoutes.put("/:postId/status", postController.updatePostStatus) //updates whether post is published to public and when
+postRoutes.put("/:postId/status", postController.updatePostStatus)
 postRoutes.put("/:postId/comments/:commentId", postController.updateComment) 
 
 postRoutes.delete("/:postId", postController.deletePost);

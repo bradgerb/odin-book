@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useSecureFetch } from "../hooks/useSecureFetch";
+import { formatDate } from "../utils/formatDate";
 import odinImg from "../img/odin.png";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -104,7 +105,11 @@ export default function Dashboard() {
                   {posts.map((post) => (
                     <li key={post.id}>
                       <Link to={`/posts/${post.id}`}>
-                        <div>{post.content} <br />Author: {post.author?.username ?? "deleted user"} - {post._count.comments} comments</div>
+                        <div>{post.content}</div>
+                        <div>
+                          Posted by: {post.author?.username ?? "deleted user"} • {formatDate(post.publishedDate)}
+                        </div>
+                        <div>{post._count.comments} comments</div>
                       </Link>
                     </li>
                   ))}

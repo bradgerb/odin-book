@@ -5,7 +5,10 @@ const { sanitizePostBody } = require("../utils/sanitizePostBody.js");
 async function getAllPostsWithAuthors(req, res) {
     try {
         const postsWithAuthors = await prisma.post.findMany({
-            include: {
+            select: {
+                id: true,
+                content: true,
+                publishedDate: true,
                 author: {
                     select: {
                         id: true,

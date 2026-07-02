@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useParams, Link, useLocation } from "react-router-dom";
 import { useSecureFetch } from "../hooks/useSecureFetch";
+import { formatDate } from "../utils/formatDate";
 import DOMPurify from 'dompurify';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -271,7 +272,9 @@ export default function PostDetails() {
                             ) : (
                                 <>
                                     <div>{comment.body}</div>
-                                    <div>{comment.author?.username ?? "deleted user"} - {isEdited ? `edited at: ${comment.updatedAt}` : `posted at: ${comment.publishedDate}`}</div>
+                                    <div>
+                                      {comment.author?.username ?? "deleted user"} - {isEdited ? `edited at: ${formatDate(comment.updatedAt)}` : `posted at: ${formatDate(comment.publishedDate)}`}
+                                    </div>
                                     {user && (user?.id === comment.authorId) && (
                                         <button className="comment-btn"
                                             type="button"
