@@ -10,6 +10,7 @@ postRoutes.get("/:postId", postController.getPostWithAuthor);
 postRoutes.get("/:postId/comments", postController.getCommentsOfPost);
 
 postRoutes.post("/", postController.createNewPost);
+postRoutes.post("/:postId/like", postController.togglePostLike);
 postRoutes.post("/:postId/comments", postController.createNewComment);
 
 postRoutes.put("/:postId", postController.updatePost);

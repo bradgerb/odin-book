@@ -4,6 +4,7 @@ const { sanitizePostBody } = require("../utils/sanitizePostBody.js");
 
 async function getAllPostsWithAuthors(req, res) {
     try {
+        const currentUserId = Number(req.user?.userId ?? 0);
         const postsWithAuthors = await prisma.post.findMany({
             select: {
                 id: true,
@@ -16,19 +17,82 @@ async function getAllPostsWithAuthors(req, res) {
                     }
                 },
                 _count: {
-                    select: { 
+                    select: {
                         comments: true,
                         postLikes: true
-                     }
+                    }
+                },
+                postLikes: {
+                    where: { userId: currentUserId },
+                    select: { userId: true }
                 }
             }
         });
+        const shapedPosts = postsWithAuthors.map((post) => ({
+            ...post,
+            isLikedByCurrentUser: post.postLikes.length > 0,
+            postLikes: undefined,
+        }));
         res.json({
-            posts: postsWithAuthors
+            posts: shapedPosts
         });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Error fetching posts' })
+    }
+}
+
+async function togglePostLike(req, res) {
+    const postId = Number(req.params.postId);
+    const currentUserId = Number(req.user?.userId ?? 0);
+
+    try {
+        const post = await prisma.post.findUnique({
+            where: { id: postId }
+        });
+
+        if (!post) {
+            return res.status(404).json({ error: 'Post not found' });
+        }
+
+        const existingLike = await prisma.postLike.findUnique({
+            where: {
+                userId_postId: {
+                    userId: currentUserId,
+                    postId,
+                }
+            }
+        });
+
+        let liked;
+        if (existingLike) {
+            await prisma.postLike.delete({
+                where: {
+                    userId_postId: {
+                        userId: currentUserId,
+                        postId,
+                    }
+                }
+            });
+            liked = false;
+        } else {
+            await prisma.postLike.create({
+                data: {
+                    userId: currentUserId,
+                    postId,
+                }
+            });
+            liked = true;
+        }
+
+        const postLikesCount = await prisma.postLike.count({
+            where: { postId }
+        });
+
+        res.json({ liked, postLikes: postLikesCount });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Error updating post like' });
     }
 }
 
@@ -108,11 +172,11 @@ async function createNewPost(req, res) {
                     }
                 },
                 _count: {
-                    select: { comments: true }
+                    select: { comments: true, postLikes: true }
                 }
             }
         })
-        res.json({ post: newPost });
+        res.json({ post: { ...newPost, isLikedByCurrentUser: false } });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Error creating post' });
@@ -243,5 +307,6 @@ module.exports = {
     updatePostStatus,
     updateComment,
     deleteComment,
-    deletePost
+    deletePost,
+    togglePostLike
 }

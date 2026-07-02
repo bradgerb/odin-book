@@ -18,6 +18,34 @@ export default function Dashboard() {
   const { user, logout } = useAuth();
   const secureFetch = useSecureFetch();
 
+  const togglePostLike = async (postId) => {
+    try {
+      const response = await secureFetch(`${API_BASE_URL}/posts/${postId}/like`, {
+        method: "POST",
+      });
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result.error || "Failed to toggle like");
+      }
+      setPosts((current) =>
+        current.map((post) =>
+          post.id === postId
+            ? {
+                ...post,
+                isLikedByCurrentUser: result.liked,
+                _count: {
+                  ...post._count,
+                  postLikes: result.postLikes,
+                },
+              }
+            : post
+        )
+      );
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   useEffect(() => {
     if (!user) return;
 
@@ -112,11 +140,35 @@ export default function Dashboard() {
                         <div>
                           Posted by: {post.author?.username ?? "deleted user"} • {formatDate(post.publishedDate)}
                         </div>
-                        <div>
-                          <img className="like" src={likeOutline} alt="Like this post"/>
-                          {post._count.postLikes} Likes • {post._count.comments} comments
-                        </div>
                       </Link>
+                      <div>
+                        <form
+                          onSubmit={(event) => {
+                            event.preventDefault();
+                            togglePostLike(post.id);
+                          }}
+                          style={{ display: "inline" }}
+                        >
+                          <button
+                            type="submit"
+                            style={{
+                              border: "none",
+                              background: "transparent",
+                              padding: 0,
+                              margin: 0,
+                              cursor: "pointer",
+                            }}
+                            aria-label={post.isLikedByCurrentUser ? "Unlike this post" : "Like this post"}
+                          >
+                            <img
+                              className="like"
+                              src={post.isLikedByCurrentUser ? like : likeOutline}
+                              alt={post.isLikedByCurrentUser ? "Unlike this post" : "Like this post"}
+                            />
+                          </button>
+                        </form>
+                        {post._count.postLikes} Likes • {post._count.comments} comments
+                      </div>
                     </li>
                   ))}
                 </ul>
