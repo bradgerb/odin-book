@@ -83,6 +83,13 @@ select {
   font: inherit;
 }
 
+hr {
+  border: none;
+  height: 1px;
+  background-color: var(--border);
+  margin: 0.75rem 0;
+}
+
 #root {
   min-height: 100vh;
 }

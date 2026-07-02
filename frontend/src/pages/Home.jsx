@@ -137,6 +137,7 @@ export default function Dashboard() {
                     <li key={post.id}>
                       <Link to={`/posts/${post.id}`}>
                         <div>{post.content}</div>
+                        <hr />
                         <div>
                           Posted by: {post.author?.username ?? "deleted user"} • {formatDate(post.publishedDate)}
                         </div>

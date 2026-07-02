@@ -272,6 +272,7 @@ export default function PostDetails() {
                             ) : (
                                 <>
                                     <div>{comment.body}</div>
+                                    <hr />
                                     <div>
                                       Posted by: {comment.author?.username ?? "deleted user"} • {isEdited ? `${formatDate(comment.updatedAt)} (edited)` : `${formatDate(comment.publishedDate)}`}
                                     </div>
