@@ -4,6 +4,7 @@ import { useParams, Link, useLocation } from "react-router-dom";
 import { useSecureFetch } from "../hooks/useSecureFetch";
 import { formatDate } from "../utils/formatDate";
 import DOMPurify from 'dompurify';
+import back from "../img/back.svg";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -210,6 +211,9 @@ export default function PostDetails() {
     }
     return (
         <div>
+            <a href="/">
+                <img className="back" src={back} alt="back" />
+            </a>
             <h2>Post Details:</h2>
             <p>Post Body:</p>
             <div

@@ -76,6 +76,11 @@ img.like {
   line-height: 1;
 }
 
+img.back {
+  width: 2em;
+  height: 2em;
+}
+
 button,
 input,
 textarea,
