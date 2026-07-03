@@ -14,6 +14,8 @@ export default function Dashboard() {
   const [posts, setPosts] = useState([]);
   const [postBody, setPostBody] = useState("");
   const [orderBy, setOrderBy] = useState("date");
+  const [showFriendsOnly, setShowFriendsOnly] = useState(false);
+  const [friendIds, setFriendIds] = useState([]);
   const [error, setError] = useState("");
   const { user, logout } = useAuth();
   const secureFetch = useSecureFetch();
@@ -72,6 +74,40 @@ export default function Dashboard() {
     };
   }, [secureFetch, user, orderBy])
 
+  useEffect(() => {
+    if (!user) {
+      setFriendIds([]);
+      return;
+    }
+
+    let cancelled = false;
+    async function loadFriends() {
+      try {
+        const response = await secureFetch(`${API_BASE_URL}/users/friends`, {
+          method: "GET",
+        });
+        if (!response.ok) {
+          const result = await response.json();
+          throw new Error(result.error || "Failed to fetch friends");
+        }
+        const data = await response.json();
+        if (cancelled) return;
+        setFriendIds((data.friends ?? []).map((friend) => friend.id));
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    loadFriends();
+    return () => {
+      cancelled = true;
+    };
+  }, [secureFetch, user]);
+
+  const visiblePosts = showFriendsOnly
+    ? posts.filter((post) => friendIds.includes(post.author?.id))
+    : posts;
+
   return (
     <>
       {!user ? (
@@ -129,8 +165,8 @@ export default function Dashboard() {
           </div>
           <br />
           <div>
-            {posts.length === 0 ? (
-              <p>No posts yet</p>
+            {posts.length === 0 || (showFriendsOnly && visiblePosts.length === 0) ? (
+              <p>{showFriendsOnly ? "No posts from friends yet" : "No posts yet"}</p>
             ) : (
               <div>
                 <div className="sort-controls">
@@ -153,12 +189,14 @@ export default function Dashboard() {
                       id="friends-posts-checkbox"
                       type="checkbox"
                       className="small-checkbox"
+                      checked={showFriendsOnly}
+                      onChange={(event) => setShowFriendsOnly(event.target.checked)}
                     />
                     View friends posts only?
                   </label>
                 </div>
                 <ul>
-                  {posts.map((post) => (
+                  {visiblePosts.map((post) => (
                     <li key={post.id}>
                       <Link to={`/posts/${post.id}`}>
                         <div>{post.content}</div>
