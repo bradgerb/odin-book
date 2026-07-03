@@ -165,8 +165,8 @@ export default function Dashboard() {
           </div>
           <br />
           <div>
-            {posts.length === 0 || (showFriendsOnly && visiblePosts.length === 0) ? (
-              <p>{showFriendsOnly ? "No posts from friends yet" : "No posts yet"}</p>
+            {posts.length === 0 ? (
+              <p>No posts yet</p>
             ) : (
               <div>
                 <div className="sort-controls">
@@ -195,47 +195,51 @@ export default function Dashboard() {
                     View friends posts only?
                   </label>
                 </div>
-                <ul>
-                  {visiblePosts.map((post) => (
-                    <li key={post.id}>
-                      <Link to={`/posts/${post.id}`}>
-                        <div>{post.content}</div>
-                        <hr />
+                {visiblePosts.length === 0 ? (
+                  <p>{showFriendsOnly ? "No posts from friends yet" : "No posts yet"}</p>
+                ) : (
+                  <ul>
+                    {visiblePosts.map((post) => (
+                      <li key={post.id}>
+                        <Link to={`/posts/${post.id}`}>
+                          <div>{post.content}</div>
+                          <hr />
+                          <div>
+                            Posted by: {post.author?.username ?? "deleted user"} • {formatDate(post.publishedDate)}
+                          </div>
+                        </Link>
                         <div>
-                          Posted by: {post.author?.username ?? "deleted user"} • {formatDate(post.publishedDate)}
-                        </div>
-                      </Link>
-                      <div>
-                        <form
-                          onSubmit={(event) => {
-                            event.preventDefault();
-                            togglePostLike(post.id);
-                          }}
-                          style={{ display: "inline" }}
-                        >
-                          <button
-                            type="submit"
-                            style={{
-                              border: "none",
-                              background: "transparent",
-                              padding: 0,
-                              margin: 0,
-                              cursor: "pointer",
+                          <form
+                            onSubmit={(event) => {
+                              event.preventDefault();
+                              togglePostLike(post.id);
                             }}
-                            aria-label={post.isLikedByCurrentUser ? "Unlike this post" : "Like this post"}
+                            style={{ display: "inline" }}
                           >
-                            <img
-                              className="like"
-                              src={post.isLikedByCurrentUser ? like : likeOutline}
-                              alt={post.isLikedByCurrentUser ? "Unlike this post" : "Like this post"}
-                            />
-                          </button>
-                        </form>
-                        {post._count.postLikes} Likes • {post._count.comments} comments
-                      </div>
-                    </li>
-                  ))}
-                </ul>
+                            <button
+                              type="submit"
+                              style={{
+                                border: "none",
+                                background: "transparent",
+                                padding: 0,
+                                margin: 0,
+                                cursor: "pointer",
+                              }}
+                              aria-label={post.isLikedByCurrentUser ? "Unlike this post" : "Like this post"}
+                            >
+                              <img
+                                className="like"
+                                src={post.isLikedByCurrentUser ? like : likeOutline}
+                                alt={post.isLikedByCurrentUser ? "Unlike this post" : "Like this post"}
+                              />
+                            </button>
+                          </form>
+                          {post._count.postLikes} Likes • {post._count.comments} comments
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
             )}
           </div>
