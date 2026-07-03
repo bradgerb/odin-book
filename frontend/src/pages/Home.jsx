@@ -7,13 +7,13 @@ import odinImg from "../img/odin.png";
 import likeOutline from "../img/likeOutline.svg";
 import like from "../img/like.svg";
 
-
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export default function Dashboard() {
 
   const [posts, setPosts] = useState([]);
   const [postBody, setPostBody] = useState("");
+  const [orderBy, setOrderBy] = useState("date");
   const [error, setError] = useState("");
   const { user, logout } = useAuth();
   const secureFetch = useSecureFetch();
@@ -52,11 +52,12 @@ export default function Dashboard() {
     let cancelled = false;
     async function loadPosts() {
       try {
-        const response = await secureFetch(`${API_BASE_URL}/posts`, {
+        const response = await secureFetch(`${API_BASE_URL}/posts?order_by=${encodeURIComponent(orderBy)}`, {
           method: "GET",
         });
         if (!response.ok) {
-          throw new Error("Failed to fetch posts");
+          const result = await response.json();
+          throw new Error(result.error || "Failed to fetch posts");
         }
         const data = await response.json();
         if (cancelled) return;
@@ -69,7 +70,7 @@ export default function Dashboard() {
     return () => {
       cancelled = true;
     };
-  }, [secureFetch, user])
+  }, [secureFetch, user, orderBy])
 
   return (
     <>
@@ -136,7 +137,13 @@ export default function Dashboard() {
                   <label htmlFor="sort-options" className="sort-label">
                     Sort by:
                   </label>
-                  <select name="order_by" id="sort-options" className="sort-select">
+                  <select
+                    name="order_by"
+                    id="sort-options"
+                    className="sort-select"
+                    value={orderBy}
+                    onChange={(event) => setOrderBy(event.target.value)}
+                  >
                     <option value="date">Newest</option>
                     <option value="likes">Most likes</option>
                     <option value="comments">Most comments</option>
@@ -146,8 +153,6 @@ export default function Dashboard() {
                       id="friends-posts-checkbox"
                       type="checkbox"
                       className="small-checkbox"
-                      // checked={isChecked}
-                      // onChange={handleCheckboxChange}
                     />
                     View friends posts only?
                   </label>

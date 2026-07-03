@@ -5,7 +5,19 @@ const { sanitizePostBody } = require("../utils/sanitizePostBody.js");
 async function getAllPostsWithAuthors(req, res) {
     try {
         const currentUserId = Number(req.user?.userId ?? 0);
+        const rawOrderBy = (req.query.order_by || "date").toString();
+        const orderByValue = ['date', 'likes', 'comments'].includes(rawOrderBy) ? rawOrderBy : 'date';
+        let orderBy;
+        if (orderByValue === 'date') {
+            orderBy = { publishedDate: 'desc' };
+        } else if (orderByValue === 'likes') {
+            orderBy = { postLikes: { _count: 'desc' } };
+        } else {
+            orderBy = { comments: { _count: 'desc' } };
+        }
+
         const postsWithAuthors = await prisma.post.findMany({
+            orderBy,
             select: {
                 id: true,
                 content: true,
