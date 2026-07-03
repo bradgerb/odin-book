@@ -22,6 +22,21 @@ model User {
   comments      Comment[]
   postLikes     PostLike[]
   commentLikes  CommentLike[]
+  sentFriendRequests     FriendRequest[] @relation("RequestSender")
+  receivedFriendRequests FriendRequest[] @relation("RequestReceiver")
+}
+
+model FriendRequest {
+  id          Int                    @id @default(autoincrement())
+  requester   User                   @relation("RequestSender", fields: [requesterId], references: [id], onDelete: Cascade)
+  requesterId Int
+  receiver    User                   @relation("RequestReceiver", fields: [receiverId], references: [id], onDelete: Cascade)
+  receiverId  Int
+  status      FriendRequestStatus    @default(PENDING)
+  createdAt   DateTime               @default(now())
+  updatedAt   DateTime               @updatedAt @default(now())
+
+  @@unique([requesterId, receiverId])
 }
 
 model Post {
@@ -68,6 +83,12 @@ model CommentLike {
   createdAt   DateTime @default(now())
 
   @@id([userId, commentId])
+}
+
+enum FriendRequestStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
 }
 
 enum Role {
