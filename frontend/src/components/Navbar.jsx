@@ -13,6 +13,7 @@ export default function Navbar() {
                 {user ?
                     (
                         <>
+                            <li><NavLink to="/friends" className={({ isActive }) => isActive ? styles.active : ""}>Friends</NavLink></li>
                             <li><span className="welcome-text">Hi, {user.username}</span></li>
                             <li><button onClick={logout} className="logout-btn">Logout</button></li>
                         </>

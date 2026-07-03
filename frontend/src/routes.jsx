@@ -4,6 +4,7 @@ import PostDetails from "./pages/PostDetails";
 import Login from "./pages/Login";
 import Register from "./pages/Register"
 import ErrorPage from "./components/ErrorPage";
+import Friends from "./pages/Friends";
 
 const routes = [
     {
@@ -26,6 +27,10 @@ const routes = [
             {
                 path: "register",
                 element: <Register />
+            },
+            {
+                path: "friends",
+                element: <Friends />
             }
         ]
     }
