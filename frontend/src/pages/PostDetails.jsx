@@ -191,7 +191,7 @@ export default function PostDetails() {
         return <div>Please input a valid id</div>;
     }
     if (postStatus === "loading") {
-        return <p>Loading…</p>;
+        return <p>Loading… This project uses a free database, so the first request may take a moment while the database wakes up.</p>;
     }
     if (postStatus === "not-found") {
         return (

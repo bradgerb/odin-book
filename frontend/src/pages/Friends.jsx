@@ -199,7 +199,7 @@ export default function Friends() {
           <button type="submit">Search</button>
         </form>
 
-        {loading && <LoadingMessage message="Loading friends data..." />}
+        {loading && <LoadingMessage message="Loading friends data... This may take a moment while the free database wakes up." />}
         {error && <p style={{ color: "red" }}>{error}</p>}
 
         <div>

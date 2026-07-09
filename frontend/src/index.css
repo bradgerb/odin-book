@@ -414,6 +414,19 @@ p[role="alert"] {
   }
 }
 
+.warmup-banner {
+  margin: 0 auto;
+  width: min(100%, 980px);
+  padding: 0.85rem 1rem;
+  border-radius: 0.95rem;
+  background: rgba(249, 250, 251, 0.92);
+  color: var(--text-muted);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  text-align: center;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
 .center {
   display: flex;
   flex-direction: column;
