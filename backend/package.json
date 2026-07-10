@@ -25,6 +25,7 @@
     "@prisma/engines@7.8.0": true
   },
   "scripts": {
-    "build": "prisma generate"
+    "build": "prisma generate",
+    "postinstall": "prisma generate"
   }
 }
