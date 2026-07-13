@@ -111,17 +111,11 @@ export default function Dashboard() {
   return (
     <>
       {!user ? (
-        <>
-        <div className="warmup-banner">
-            Because this project uses a free database, the first request can take a moment while the database wakes up.
-        </div>
-        <br />
         <div className="center">
           <h1>Home page</h1>
           <p>Welcome to Odinbook!</p>
           <img src={odinImg} alt="Odin image" className="odinImage" height={200}/>
         </div>
-        </>
       ) : (
         <>
           <div>
