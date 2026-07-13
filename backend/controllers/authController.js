@@ -75,6 +75,9 @@ async function register(req, res) {
         })
     } catch (err) {
         console.error(err);
+        if (err.code === 'P2002') {
+            return res.status(409).json({ error: 'Username already taken' });
+        }
         res.status(500).json({ error: 'Error registering user' })
     }
 }
