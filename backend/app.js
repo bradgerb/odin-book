@@ -25,10 +25,12 @@ app.use((req, res, next) => {
     });
 });
 
-const PORT = 3000;
-app.listen(3000, (error) => {
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, (error) => {
   if (error) {
     throw error;
   }
   console.log(`Odin book - listening on port ${PORT}!`);
 });
+
+module.exports = app;
